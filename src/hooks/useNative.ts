@@ -24,14 +24,6 @@ export const useNative = () => {
       }
     };
 
-        // 사진 목록 콜백 추가
-    window.photoListCallback = (data) => {
-      console.log('📸 사진 목록 받음:', data);
-      if (data.photos) {
-        setPhotos(data.photos);
-      }
-    };
-
     window.contactListCallback = (data) => {
       console.log('📇 연락처 받음:', data);
       if (data.status === 'success' && data.contacts) {
@@ -46,10 +38,7 @@ export const useNative = () => {
       }
     };
 
-    // ✅ 앱 시작 시 저장된 사진 불러오기
-    if (native) {
-      window.webkit?.messageHandlers?.loadPhotos?.postMessage({});
-    }
+
     // cleanup
     return () => {
       window.photoCallback = undefined;
@@ -70,7 +59,6 @@ export const useNative = () => {
   const openCamera = () => sendMessage('openCamera');
   const openGallery = () => sendMessage('openGallery');
   const getContacts = () => sendMessage('getContacts');
-  const loadPhotos = () => sendMessage('loadPhotos'); 
 
 
 
@@ -81,6 +69,5 @@ export const useNative = () => {
     openCamera,
     openGallery,
     getContacts,
-    loadPhotos
   };
 };
