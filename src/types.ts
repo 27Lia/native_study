@@ -21,13 +21,12 @@ declare global {
         openCamera?: { postMessage: (data: any) => void };
         openGallery?: { postMessage: (data: any) => void };
         getContacts?: { postMessage: (data: any) => void };
-        getAppVersion?: { postMessage: (data: any) => void };
-        openAppSettings?: { postMessage: (data: any) => void };
+        loadPhotos?: { postMessage: (data: any) => void };
       };
     };
     photoCallback?: (data: any) => void;
     contactListCallback?: (data: any) => void;
-    appVersionCallback?: (data: any) => void;
+    photoListCallback?: (data: any) => void;
   }
 }
 

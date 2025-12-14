@@ -5,7 +5,6 @@ export const useNative = () => {
   const [isNative, setIsNative] = useState(false);
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [contacts, setContacts] = useState<Contact[]>([]);
-  const [appVersion, setAppVersion] = useState('');
 
   useEffect(() => {
     // iOS 네이티브 체크
@@ -25,6 +24,14 @@ export const useNative = () => {
       }
     };
 
+        // 사진 목록 콜백 추가
+    window.photoListCallback = (data) => {
+      console.log('📸 사진 목록 받음:', data);
+      if (data.photos) {
+        setPhotos(data.photos);
+      }
+    };
+
     window.contactListCallback = (data) => {
       console.log('📇 연락처 받음:', data);
       if (data.status === 'success' && data.contacts) {
@@ -39,21 +46,15 @@ export const useNative = () => {
       }
     };
 
-    window.appVersionCallback = (data) => {
-      console.log('📱 앱 버전:', data);
-      setAppVersion(data.version);
-    };
-
-    // 앱 버전 조회
+    // ✅ 앱 시작 시 저장된 사진 불러오기
     if (native) {
-      window.webkit?.messageHandlers?.getAppVersion?.postMessage({});
+      window.webkit?.messageHandlers?.loadPhotos?.postMessage({});
     }
-
     // cleanup
     return () => {
       window.photoCallback = undefined;
+            window.photoListCallback = undefined;
       window.contactListCallback = undefined;
-      window.appVersionCallback = undefined;
     };
   }, []);
 
@@ -69,7 +70,7 @@ export const useNative = () => {
   const openCamera = () => sendMessage('openCamera');
   const openGallery = () => sendMessage('openGallery');
   const getContacts = () => sendMessage('getContacts');
-  const openAppSettings = () => sendMessage('openAppSettings');
+  const loadPhotos = () => sendMessage('loadPhotos'); 
 
 
 
@@ -77,10 +78,9 @@ export const useNative = () => {
     isNative,
     photos,
     contacts,
-    appVersion,
     openCamera,
     openGallery,
     getContacts,
-    openAppSettings,
+    loadPhotos
   };
 };
