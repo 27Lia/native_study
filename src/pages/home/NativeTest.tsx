@@ -40,7 +40,7 @@ const NativeTest = () => {
                   key={photo.id}
                   className="relative bg-white rounded-2xl overflow-hidden shadow hover:shadow-lg transition transform hover:scale-105">
                   <img
-                    src={photo.data}
+                    src={`data:image/jpeg;base64,${photo.data}`}
                     alt=""
                     className="w-48 h-48 object-cover"
                   />
