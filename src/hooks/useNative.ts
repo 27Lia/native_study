@@ -42,7 +42,6 @@ export const useNative = () => {
     // cleanup
     return () => {
       window.photoCallback = undefined;
-            window.photoListCallback = undefined;
       window.contactListCallback = undefined;
     };
   }, []);

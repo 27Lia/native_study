@@ -34,15 +34,15 @@ const NativeTest = () => {
       <main>
         {activeTab === "photos" ? (
           photos.length > 0 ? (
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-2">
               {photos.map((photo) => (
                 <div
                   key={photo.id}
-                  className="relative bg-white rounded-2xl overflow-hidden shadow hover:shadow-lg transition transform hover:scale-105">
+                  className="relative bg-white rounded-lg overflow-hidden shadow hover:shadow-lg transition">
                   <img
                     src={photo.data}
                     alt=""
-                    className="w-48 h-48 object-cover"
+                    className="w-full h-24 object-cover"
                   />
                 </div>
               ))}
