@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Contact, Photo } from 'types';
 
-
 export const useNative = () => {
   const [isNative, setIsNative] = useState(false);
   const [photos, setPhotos] = useState<Photo[]>([]);
@@ -72,9 +71,7 @@ export const useNative = () => {
   const getContacts = () => sendMessage('getContacts');
   const openAppSettings = () => sendMessage('openAppSettings');
 
-  const deletePhoto = (id: number) => {
-    setPhotos(prev => prev.filter(p => p.id !== id));
-  };
+
 
   return {
     isNative,
@@ -85,6 +82,5 @@ export const useNative = () => {
     openGallery,
     getContacts,
     openAppSettings,
-    deletePhoto
   };
 };
