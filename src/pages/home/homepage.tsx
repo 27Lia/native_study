@@ -11,6 +11,7 @@ declare global {
 
 const Homepage = () => {
   const [contacts, setContacts] = useState([]);
+  const [photos, setPhotos] = useState<string[]>([]);
 
   // RN에서 메시지 받기
   useEffect(() => {
@@ -18,8 +19,22 @@ const Homepage = () => {
       try {
         const messageEvent = event as MessageEvent;
         const data = JSON.parse(messageEvent.data);
+
+        // 연락처 결과
         if (data.type === "CONTACTS_RESULT") {
           setContacts(data.data);
+        }
+
+        // 카메라 결과
+        if (data.type === "CAMERA_RESULT") {
+          console.log("선택한 사진:", data.data);
+          setPhotos((prev) => [...prev, data.data]);
+        }
+
+        // 갤러리 결과
+        if (data.type === "GALLERY_RESULT") {
+          console.log("갤러리 사진들:", data.data);
+          setPhotos((prev) => [...prev, ...data.data]);
         }
       } catch (e) {
         console.error("메시지 파싱 에러:", e);
@@ -58,7 +73,7 @@ const Homepage = () => {
         JSON.stringify({ type: "OPEN_CAMERA" }),
       );
     } else {
-      // 웹 폴백
+      // 웹에서 열때
       const input = document.createElement("input");
       input.type = "file";
       input.accept = "image/*";
@@ -111,6 +126,29 @@ const Homepage = () => {
           <div className="text-4xl mb-2">👥</div>
           <p className="text-white font-medium">연락처</p>
         </button>
+
+        {/* 사진 미리보기 */}
+        {photos.length > 0 && (
+          <div className="max-w-md mx-auto mb-6">
+            <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-4">
+              <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
+                <Camera className="w-5 h-5" />
+                사진 ({photos.length})
+              </h3>
+              <div className="grid grid-cols-3 gap-2">
+                {photos.map((photo, index) => (
+                  <div key={index} className="relative">
+                    <img
+                      src={photo}
+                      alt=""
+                      className="w-full h-24 object-cover rounded-lg"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* 연락처 목록 */}
         {contacts.length > 0 && (
