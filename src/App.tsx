@@ -6,7 +6,6 @@ import RootLayout from "./_root/RootRayout";
 import NotFound from "./_root/pages/NotFound";
 import AuthLayout from "./_auth/AuthRayout";
 import AppTheme from "./theme";
-import NativeTest from "@pages/home/NativeTest";
 
 function App() {
   console.log(process.env.REACT_APP_BASE_URL);

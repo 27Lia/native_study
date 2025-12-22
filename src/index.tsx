@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
+import "./tailwind.css";
 
 import GlobalStyle from "@asset/styles/GlobalStyle";
 import App from "./App";
