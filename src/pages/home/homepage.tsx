@@ -53,18 +53,18 @@ const Homepage = () => {
 
   // 카메라 열기
   const handleCamera = () => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = "image/*";
-    input.capture = "environment"; // 후면 카메라
-    input.onchange = (e: any) => {
-      const file = e.target.files?.[0];
-      if (file) {
-        console.log("사진 찍음:", file);
-        // 파일 처리 로직
-      }
-    };
-    input.click();
+    if (window.ReactNativeWebView) {
+      window.ReactNativeWebView.postMessage(
+        JSON.stringify({ type: "OPEN_CAMERA" }),
+      );
+    } else {
+      // 웹 폴백
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = "image/*";
+      input.capture = "environment";
+      input.click();
+    }
   };
 
   // 갤러리 열기
