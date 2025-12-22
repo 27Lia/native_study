@@ -1,6 +1,6 @@
 <<<<<<< HEAD
 # default-typescript
-default project typescript
+default project typescript .
 =======
 # Getting Started with Create React App
 
