@@ -36,8 +36,11 @@ const Homepage = () => {
         if (data.type === "GALLERY_RESULT") {
           console.log("갤러리 사진들:", data.data);
           setDebugInfo(`받은 데이터: ${data.data.length}개`);
-
           setPhotos((prev) => [...prev, ...data.data]);
+        }
+
+        if (data.type === "GALLERY_DEBUG") {
+          setDebugInfo(data.message);
         }
       } catch (e) {
         console.error("메시지 파싱 에러:", e);
