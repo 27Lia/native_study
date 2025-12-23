@@ -79,27 +79,24 @@ const Homepage = () => {
       window.ReactNativeWebView.postMessage(
         JSON.stringify({ type: "OPEN_CAMERA" }),
       );
-    } else {
-      // 웹에서 열때
-      const input = document.createElement("input");
-      input.type = "file";
-      input.accept = "image/*";
-      input.capture = "environment";
-      input.click();
     }
   };
 
   // 갤러리 열기
   const handleGallery = () => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = "image/*";
-    input.multiple = true; // 여러 장 선택
-    input.onchange = (e: any) => {
-      const files = Array.from(e.target.files || []);
-      console.log("갤러리에서 선택:", files);
-    };
-    input.click();
+    setDebugInfo("갤러리 버튼 클릭됨");
+
+    if (window.ReactNativeWebView) {
+      setDebugInfo("RN으로 메시지 전송 시도");
+
+      window.ReactNativeWebView.postMessage(
+        JSON.stringify({ type: "OPEN_GALLERY" }),
+      );
+
+      setDebugInfo("메시지 전송 완료");
+    } else {
+      setDebugInfo("ReactNativeWebView 없음 (웹 브라우저)");
+    }
   };
 
   return (
