@@ -12,6 +12,7 @@ declare global {
 const Homepage = () => {
   const [contacts, setContacts] = useState([]);
   const [photos, setPhotos] = useState<string[]>([]);
+  const [debugInfo, setDebugInfo] = useState("");
 
   // RN에서 메시지 받기
   useEffect(() => {
@@ -34,10 +35,13 @@ const Homepage = () => {
         // 갤러리 결과
         if (data.type === "GALLERY_RESULT") {
           console.log("갤러리 사진들:", data.data);
+          setDebugInfo(`받은 데이터: ${data.data.length}개`);
+
           setPhotos((prev) => [...prev, ...data.data]);
         }
       } catch (e) {
         console.error("메시지 파싱 에러:", e);
+        setDebugInfo(`에러: ${e}`);
       }
     };
 
@@ -126,6 +130,12 @@ const Homepage = () => {
           <div className="text-4xl mb-2">👥</div>
           <p className="text-white font-medium">연락처</p>
         </button>
+
+        {debugInfo && (
+          <div className="bg-red-500 text-white p-4 text-center">
+            {debugInfo}
+          </div>
+        )}
 
         {/* 사진 미리보기 */}
         {photos.length > 0 && (
