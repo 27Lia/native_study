@@ -79,13 +79,6 @@ const Homepage = () => {
       window.ReactNativeWebView.postMessage(
         JSON.stringify({ type: "OPEN_CAMERA" }),
       );
-    } else {
-      // 웹에서 열때
-      const input = document.createElement("input");
-      input.type = "file";
-      input.accept = "image/*";
-      input.capture = "environment";
-      input.click();
     }
   };
 
@@ -129,12 +122,6 @@ const Homepage = () => {
           <div className="text-4xl mb-2">👥</div>
           <p className="text-white font-medium">연락처</p>
         </button>
-
-        {debugInfo && (
-          <div className="bg-red-500 text-white p-4 text-center">
-            {debugInfo}
-          </div>
-        )}
 
         {/* 사진 미리보기 */}
         {photos.length > 0 && (
