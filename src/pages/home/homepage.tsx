@@ -131,11 +131,9 @@ const Homepage = () => {
           <p className="text-white font-medium">연락처</p>
         </button>
 
-        {debugInfo && (
-          <div className="bg-red-500 text-white p-4 text-center">
-            {debugInfo}
-          </div>
-        )}
+        {/* {debugInfo && ( */}
+        <div className="bg-red-500 text-white p-4 text-center">{debugInfo}</div>
+        {/* // )} */}
 
         {/* 사진 미리보기 */}
         {photos.length > 0 && (
