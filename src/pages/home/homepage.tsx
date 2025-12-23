@@ -79,23 +79,22 @@ const Homepage = () => {
       window.ReactNativeWebView.postMessage(
         JSON.stringify({ type: "OPEN_CAMERA" }),
       );
+    } else {
+      // 웹에서 열때
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = "image/*";
+      input.capture = "environment";
+      input.click();
     }
   };
 
   // 갤러리 열기
   const handleGallery = () => {
-    setDebugInfo("갤러리 버튼 클릭됨");
-
     if (window.ReactNativeWebView) {
-      setDebugInfo("RN으로 메시지 전송 시도");
-
       window.ReactNativeWebView.postMessage(
         JSON.stringify({ type: "OPEN_GALLERY" }),
       );
-
-      setDebugInfo("메시지 전송 완료");
-    } else {
-      setDebugInfo("ReactNativeWebView 없음 (웹 브라우저)");
     }
   };
 
@@ -131,9 +130,11 @@ const Homepage = () => {
           <p className="text-white font-medium">연락처</p>
         </button>
 
-        {/* {debugInfo && ( */}
-        <div className="bg-red-500 text-white p-4 text-center">{debugInfo}</div>
-        {/* // )} */}
+        {debugInfo && (
+          <div className="bg-red-500 text-white p-4 text-center">
+            {debugInfo}
+          </div>
+        )}
 
         {/* 사진 미리보기 */}
         {photos.length > 0 && (
