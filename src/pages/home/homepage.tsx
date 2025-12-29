@@ -12,7 +12,6 @@ declare global {
 const Homepage = () => {
   const [contacts, setContacts] = useState([]);
   const [photos, setPhotos] = useState<string[]>([]);
-  const [debugInfo, setDebugInfo] = useState("");
 
   // RN에서 메시지 받기
   useEffect(() => {
@@ -28,23 +27,15 @@ const Homepage = () => {
 
         // 카메라 결과
         if (data.type === "CAMERA_RESULT") {
-          console.log("선택한 사진:", data.data);
           setPhotos((prev) => [...prev, data.data]);
         }
 
         // 갤러리 결과
         if (data.type === "GALLERY_RESULT") {
-          console.log("갤러리 사진들:", data.data);
-          setDebugInfo(`받은 데이터: ${data.data.length}개`);
           setPhotos((prev) => [...prev, ...data.data]);
-        }
-
-        if (data.type === "GALLERY_DEBUG") {
-          setDebugInfo(data.message);
         }
       } catch (e) {
         console.error("메시지 파싱 에러:", e);
-        setDebugInfo(`에러: ${e}`);
       }
     };
 
@@ -68,8 +59,6 @@ const Homepage = () => {
           type: "GET_CONTACTS",
         }),
       );
-    } else {
-      alert("RN 앱에서만 작동합니다");
     }
   };
 
