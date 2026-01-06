@@ -13,7 +13,15 @@ const QRTab = () => {
         const data = JSON.parse(messageEvent.data);
 
         if (data.type === "QR_SCAN_RESULT") {
-          setScannedData(data.data);
+          const qrValue = data.data;
+          setScannedData(qrValue);
+
+          // URL이면 자동으로 이동
+          if (qrValue.startsWith("http://") || qrValue.startsWith("https://")) {
+            setTimeout(() => {
+              window.location.href = qrValue;
+            }, 500); // 0.5초 뒤 이동 (결과 보여주고)
+          }
         }
       } catch (e) {
         console.error("메시지 파싱 에러:", e);
@@ -31,10 +39,14 @@ const QRTab = () => {
 
   // RN에 QR 스캔 요청
   const handleQRScan = () => {
+    console.log("QR 스캔 요청"); // 디버깅용
+
     if (window.ReactNativeWebView) {
       window.ReactNativeWebView.postMessage(
         JSON.stringify({ type: "OPEN_QR_SCANNER" }),
       );
+    } else {
+      alert("네이티브 환경에서만 사용 가능합니다.");
     }
   };
 
@@ -56,23 +68,30 @@ const QRTab = () => {
         </button>
       </div>
 
-      {/* 스캔 결과 */}
-      {scannedData && (
-        <div className="bg-white rounded-2xl p-5 shadow-sm">
-          <div className="flex items-center gap-2 mb-3">
-            <CheckCircle className="w-5 h-5 text-green-500" />
-            <h3 className="text-gray-900 font-bold">스캔 완료</h3>
+      {/* 스캔 결과 - URL이면 자동 이동, 아니면 표시 */}
+      {scannedData &&
+        !(
+          scannedData.startsWith("http://") ||
+          scannedData.startsWith("https://")
+        ) && (
+          <div className="bg-white rounded-3xl p-5 shadow-sm">
+            <div className="flex items-center gap-2 mb-3">
+              <CheckCircle className="w-5 h-5 text-green-500" />
+              <h3 className="text-gray-900 font-bold">스캔 완료!</h3>
+            </div>
+            <div className="p-4 bg-gray-50 rounded-xl mb-3">
+              <p className="text-gray-900 font-medium break-all">
+                {scannedData}
+              </p>
+            </div>
+
+            <button
+              onClick={() => setScannedData("")}
+              className="w-full mt-3 text-gray-500 text-sm py-2 hover:text-gray-700">
+              다시 스캔하기
+            </button>
           </div>
-          <div className="p-4 bg-gray-50 rounded-xl">
-            <p className="text-gray-900 font-medium break-all">{scannedData}</p>
-          </div>
-          <button
-            onClick={() => setScannedData("")}
-            className="w-full mt-3 text-gray-500 text-sm py-2">
-            다시 스캔하기
-          </button>
-        </div>
-      )}
+        )}
     </div>
   );
 };
