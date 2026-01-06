@@ -1,5 +1,9 @@
-import { Camera, Image, Users, Phone } from "lucide-react";
+// Homepage.tsx
+import MapTab from "@components/MapTab";
+import NativeTab from "@components/NativeTab";
+import QRTab from "@components/QRTab";
 import { useEffect, useState } from "react";
+import { Camera, Map, ScanLine } from "lucide-react";
 
 declare global {
   interface Window {
@@ -10,27 +14,24 @@ declare global {
 }
 
 const Homepage = () => {
+  const [activeTab, setActiveTab] = useState<"native" | "map" | "qr">("native");
   const [contacts, setContacts] = useState([]);
   const [photos, setPhotos] = useState<string[]>([]);
 
-  // RN에서 메시지 받기
   useEffect(() => {
     const handleMessage = (event: Event) => {
       try {
         const messageEvent = event as MessageEvent;
         const data = JSON.parse(messageEvent.data);
 
-        // 연락처 결과
         if (data.type === "CONTACTS_RESULT") {
           setContacts(data.data);
         }
 
-        // 카메라 결과
         if (data.type === "CAMERA_RESULT") {
           setPhotos((prev) => [...prev, data.data]);
         }
 
-        // 갤러리 결과
         if (data.type === "GALLERY_RESULT") {
           setPhotos((prev) => [...prev, ...data.data]);
         }
@@ -39,10 +40,7 @@ const Homepage = () => {
       }
     };
 
-    // Window message 이벤트
     window.addEventListener("message", handleMessage as EventListener);
-
-    // Android용 document message (타입 캐스팅)
     document.addEventListener("message", handleMessage as EventListener);
 
     return () => {
@@ -51,18 +49,14 @@ const Homepage = () => {
     };
   }, []);
 
-  // 연락처 요청
   const handleGetContacts = () => {
     if (window.ReactNativeWebView) {
       window.ReactNativeWebView.postMessage(
-        JSON.stringify({
-          type: "GET_CONTACTS",
-        }),
+        JSON.stringify({ type: "GET_CONTACTS" }),
       );
     }
   };
 
-  // 카메라 열기
   const handleCamera = () => {
     if (window.ReactNativeWebView) {
       window.ReactNativeWebView.postMessage(
@@ -71,7 +65,6 @@ const Homepage = () => {
     }
   };
 
-  // 갤러리 열기
   const handleGallery = () => {
     if (window.ReactNativeWebView) {
       window.ReactNativeWebView.postMessage(
@@ -80,72 +73,82 @@ const Homepage = () => {
     }
   };
 
+  const tabs = [
+    { id: "native", label: "홈", icon: Camera },
+    { id: "map", label: "지도", icon: Map },
+    { id: "qr", label: "스캔", icon: ScanLine },
+  ];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6">
-      {/* 헤더 */}
-      <div className="text-center mb-12 pt-8">
-        <h1 className="text-4xl font-bold text-white mb-2">Native Features</h1>
-        <p className="text-purple-200">모바일 네이티브 기능 테스트</p>
+    <div className="min-h-screen bg-gray-50 pb-20">
+      {/* 헤더 - 고정 */}
+      <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100">
+        <div className="px-6 pt-safe">
+          {/* 상단 상태바 영역 */}
+          <div className="h-3"></div>
+
+          {/* 헤더 컨텐츠 */}
+          <div className="py-4">
+            <h1 className="text-2xl font-bold text-gray-900">
+              Native Features
+            </h1>
+            <p className="text-sm text-gray-500 mt-0.5">모바일 네이티브 기능</p>
+          </div>
+
+          {/* 탭 네비게이션 */}
+          <div className="flex gap-1 pb-2 overflow-x-auto scrollbar-hide">
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as typeof activeTab)}
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-full font-semibold text-sm whitespace-nowrap transition-all ${
+                    isActive
+                      ? "bg-blue-500 text-white shadow-lg shadow-blue-500/30"
+                      : "text-gray-600 hover:bg-gray-100"
+                  }`}>
+                  <Icon className="w-4 h-4" />
+                  {tab.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
       </div>
 
-      {/* 기능 버튼들 */}
-      <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
-        <button
-          onClick={handleCamera}
-          className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-6 hover:bg-white/20 transition active:scale-95">
-          <Camera className="w-8 h-8 text-white mx-auto mb-2" />
-          <p className="text-white font-medium">카메라</p>
-        </button>
+      {/* 컨텐츠 영역 */}
+      <div className="px-4 pt-4 pb-safe">
+        <div
+          className={`transition-opacity duration-300 ${
+            activeTab === "native" ? "opacity-100" : "opacity-0 hidden"
+          }`}>
+          {activeTab === "native" && (
+            <NativeTab
+              contacts={contacts}
+              photos={photos}
+              onCamera={handleCamera}
+              onGallery={handleGallery}
+              onGetContacts={handleGetContacts}
+            />
+          )}
+        </div>
 
-        <button
-          onClick={handleGallery}
-          className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-6 hover:bg-white/20 transition active:scale-95">
-          <Image className="w-8 h-8 text-white mx-auto mb-2" />
-          <p className="text-white font-medium">갤러리</p>
-        </button>
+        <div
+          className={`transition-opacity duration-300 ${
+            activeTab === "map" ? "opacity-100" : "opacity-0 hidden"
+          }`}>
+          {activeTab === "map" && <MapTab />}
+        </div>
 
-        {/* 연락처 버튼 */}
-        <button
-          onClick={handleGetContacts}
-          className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-6">
-          <div className="text-4xl mb-2">👥</div>
-          <p className="text-white font-medium">연락처</p>
-        </button>
-
-        {/* 사진 미리보기 */}
-        {photos.length > 0 && (
-          <div className="max-w-md mx-auto mb-6">
-            <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-4">
-              <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
-                <Camera className="w-5 h-5" />
-                사진 ({photos.length})
-              </h3>
-              <div className="grid grid-cols-3 gap-2">
-                {photos.map((photo, index) => (
-                  <div key={index} className="relative">
-                    <img
-                      src={photo}
-                      alt=""
-                      className="w-full h-24 object-cover rounded-lg"
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* 연락처 목록 */}
-        {contacts.length > 0 && (
-          <div className="mt-6 space-y-2">
-            {contacts.map((contact: any) => (
-              <div key={contact.id} className="bg-white/10 p-4 rounded-lg">
-                <p className="text-white">{contact.name}</p>
-                <p className="text-purple-200 text-sm">{contact.phone}</p>
-              </div>
-            ))}
-          </div>
-        )}
+        <div
+          className={`transition-opacity duration-300 ${
+            activeTab === "qr" ? "opacity-100" : "opacity-0 hidden"
+          }`}>
+          {activeTab === "qr" && <QRTab />}
+        </div>
       </div>
     </div>
   );
