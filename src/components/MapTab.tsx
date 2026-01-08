@@ -104,42 +104,6 @@ const MapTab = () => {
         </div>
       </button>
 
-      {/* 위치 정보 카드 */}
-      {myLocation && (
-        <div className="bg-white rounded-3xl p-5 shadow-sm">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center">
-              <MapPin className="w-5 h-5 text-blue-500" />
-            </div>
-            <div className="flex-1">
-              <h3 className="text-gray-900 font-bold text-base">현재 위치</h3>
-              <p className="text-gray-500 text-xs">GPS 좌표</p>
-            </div>
-            <button
-              onClick={openInGoogleMaps}
-              className="p-2 bg-blue-50 rounded-xl active:scale-95 transition-transform">
-              <ExternalLink className="w-4 h-4 text-blue-500" />
-            </button>
-          </div>
-
-          <div className="space-y-2 bg-gray-50 rounded-2xl p-4">
-            <div className="flex items-center justify-between">
-              <span className="text-gray-600 text-sm font-medium">위도</span>
-              <span className="text-gray-900 text-sm font-semibold">
-                {myLocation.lat.toFixed(6)}
-              </span>
-            </div>
-            <div className="h-px bg-gray-200"></div>
-            <div className="flex items-center justify-between">
-              <span className="text-gray-600 text-sm font-medium">경도</span>
-              <span className="text-gray-900 text-sm font-semibold">
-                {myLocation.lng.toFixed(6)}
-              </span>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* 지도 영역 - 구글맵 iframe */}
       {myLocation ? (
         <div className="bg-white rounded-3xl overflow-hidden shadow-sm">
