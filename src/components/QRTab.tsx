@@ -15,6 +15,13 @@ const QRTab = () => {
         if (data.type === "QR_SCAN_RESULT") {
           const qrValue = data.data;
           setScannedData(qrValue);
+
+          // URL이면 자동 이동
+          if (qrValue.startsWith("http://") || qrValue.startsWith("https://")) {
+            setTimeout(() => {
+              window.location.href = qrValue;
+            }, 500); // 0.5초 후 이동 (결과 잠깐 보여주고)
+          }
         }
       } catch (e) {
         console.error("메시지 파싱 에러:", e);
