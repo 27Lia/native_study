@@ -18,9 +18,7 @@ const QRTab = () => {
 
           // URL이면 자동 이동
           if (qrValue.startsWith("http://") || qrValue.startsWith("https://")) {
-            setTimeout(() => {
-              window.location.href = qrValue;
-            }, 500); // 0.5초 후 이동 (결과 잠깐 보여주고)
+            window.location.href = qrValue;
           }
         }
       } catch (e) {
