@@ -55,7 +55,6 @@ const QRTab = () => {
           className="w-full bg-blue-500 text-white rounded-xl p-4 font-semibold active:scale-95 transition-transform">
           스캔 시작
         </button>
-        <div> scannedData : {scannedData}</div>
       </div>
 
       {/* 스캔 결과 - URL이면 자동 이동, 아니면 표시 */}
