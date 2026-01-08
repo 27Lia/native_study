@@ -1,11 +1,4 @@
-// components/MapTab.tsx
-import {
-  MapPin,
-  Navigation,
-  Crosshair,
-  Loader2,
-  ExternalLink,
-} from "lucide-react";
+import { Navigation, Crosshair, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 
 const MapTab = () => {
@@ -53,35 +46,6 @@ const MapTab = () => {
       window.ReactNativeWebView.postMessage(
         JSON.stringify({ type: "GET_LOCATION" }),
       );
-    } else {
-      // 웹 환경에서는 브라우저 Geolocation 사용
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            setMyLocation({
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-            });
-            setLoading(false);
-          },
-          (error) => {
-            console.error("위치 가져오기 실패:", error);
-            alert("위치 정보를 가져올 수 없습니다.");
-            setLoading(false);
-          },
-        );
-      } else {
-        alert("위치 서비스를 지원하지 않는 환경입니다.");
-        setLoading(false);
-      }
-    }
-  };
-
-  // 구글맵에서 열기
-  const openInGoogleMaps = () => {
-    if (myLocation) {
-      const url = `https://www.google.com/maps?q=${myLocation.lat},${myLocation.lng}`;
-      window.open(url, "_blank");
     }
   };
 
