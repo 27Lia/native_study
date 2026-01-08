@@ -17,12 +17,12 @@ const QRTab = () => {
           setScannedData(qrValue);
 
           // URL이면 자동으로 이동
-          if (qrValue.startsWith("http://") || qrValue.startsWith("https://")) {
-            setTimeout(() => {
-              alert(`이동: ${qrValue}`);
-              window.location.href = qrValue;
-            }, 500); // 0.5초 뒤 이동 (결과 보여주고)
-          }
+          //   if (qrValue.startsWith("http://") || qrValue.startsWith("https://")) {
+          //     setTimeout(() => {
+          //       alert(`이동: ${qrValue}`);
+          //       window.location.href = qrValue;
+          //     }, 500); // 0.5초 뒤 이동 (결과 보여주고)
+          //   }
         }
       } catch (e) {
         console.error("메시지 파싱 에러:", e);
@@ -46,8 +46,6 @@ const QRTab = () => {
       window.ReactNativeWebView.postMessage(
         JSON.stringify({ type: "OPEN_QR_SCANNER" }),
       );
-    } else {
-      alert("네이티브 환경에서만 사용 가능합니다.");
     }
   };
 
@@ -67,6 +65,7 @@ const QRTab = () => {
           className="w-full bg-blue-500 text-white rounded-xl p-4 font-semibold active:scale-95 transition-transform">
           스캔 시작
         </button>
+        <div> scannedData : {scannedData}</div>
       </div>
 
       {/* 스캔 결과 - URL이면 자동 이동, 아니면 표시 */}
