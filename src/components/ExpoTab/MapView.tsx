@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { MapPin, Navigation, Award } from "lucide-react";
 import type { RecommendedPlace, Stamp } from "./index";
 
@@ -9,10 +9,132 @@ interface Props {
   onBack: () => void;
 }
 
+// 네이버 지도 타입 선언
+declare global {
+  interface Window {
+    naver: any;
+  }
+}
+
 const MapView: React.FC<Props> = ({ places, stamps, onStampAdded, onBack }) => {
+  const mapRef = useRef<HTMLDivElement>(null);
+  const naverMapRef = useRef<any>(null);
+  const markersRef = useRef<any[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<RecommendedPlace | null>(
     null,
   );
+
+  // 네이버 지도 초기화
+  useEffect(() => {
+    if (!mapRef.current || !window.naver) return;
+
+    // 기본 중심 좌표 (태안)
+    const defaultCenter = new window.naver.maps.LatLng(36.7458, 126.2986);
+
+    // 지도 생성
+    const mapOptions = {
+      center:
+        places.length > 0
+          ? new window.naver.maps.LatLng(
+              places[0].latitude,
+              places[0].longitude,
+            )
+          : defaultCenter,
+      zoom: 14,
+      zoomControl: true,
+      zoomControlOptions: {
+        position: window.naver.maps.Position.TOP_RIGHT,
+      },
+    };
+
+    naverMapRef.current = new window.naver.maps.Map(mapRef.current, mapOptions);
+
+    // 마커 생성
+    createMarkers();
+
+    return () => {
+      // 마커 정리
+      markersRef.current.forEach((marker) => marker.setMap(null));
+      markersRef.current = [];
+    };
+  }, [places]);
+
+  // 마커 생성 함수
+  const createMarkers = () => {
+    if (!naverMapRef.current || !window.naver) return;
+
+    // 기존 마커 삭제
+    markersRef.current.forEach((marker) => marker.setMap(null));
+    markersRef.current = [];
+
+    places.forEach((place, index) => {
+      const stamped = isStamped(place.id);
+
+      // 커스텀 마커 HTML
+      const markerContent = `
+        <div style="
+          position: relative;
+          width: 40px;
+          height: 40px;
+        ">
+          <div style="
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: ${stamped ? "#10b981" : "linear-gradient(135deg, #3b82f6, #8b5cf6)"};
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            border: 3px solid white;
+          ">
+            ${stamped ? "✓" : index + 1}
+          </div>
+          <div style="
+            position: absolute;
+            top: 45px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 4px 8px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            white-space: nowrap;
+            font-size: 12px;
+            font-weight: bold;
+            color: #111;
+          ">
+            ${place.name}
+          </div>
+        </div>
+      `;
+
+      // 마커 생성
+      const marker = new window.naver.maps.Marker({
+        position: new window.naver.maps.LatLng(place.latitude, place.longitude),
+        map: naverMapRef.current,
+        icon: {
+          content: markerContent,
+          anchor: new window.naver.maps.Point(20, 20),
+        },
+      });
+
+      // 마커 클릭 이벤트
+      window.naver.maps.Event.addListener(marker, "click", () => {
+        setSelectedPlace(place);
+
+        // 지도 중심 이동
+        naverMapRef.current.panTo(
+          new window.naver.maps.LatLng(place.latitude, place.longitude),
+        );
+      });
+
+      markersRef.current.push(marker);
+    });
+  };
 
   // QR 스캔 결과 받기
   useEffect(() => {
@@ -21,11 +143,9 @@ const MapView: React.FC<Props> = ({ places, stamps, onStampAdded, onBack }) => {
         const data = JSON.parse(event.data);
 
         if (data.type === "QR_SCAN_RESULT") {
-          // QR 코드 데이터로 장소 찾기
           const place = places.find((p) => p.id === data.data);
 
           if (place) {
-            // 이미 스탬프 찍었는지 확인
             const alreadyStamped = stamps.some((s) => s.id === place.id);
 
             if (alreadyStamped) {
@@ -33,7 +153,6 @@ const MapView: React.FC<Props> = ({ places, stamps, onStampAdded, onBack }) => {
               return;
             }
 
-            // 스탬프 추가
             const newStamp: Stamp = {
               id: place.id,
               name: place.name,
@@ -45,6 +164,9 @@ const MapView: React.FC<Props> = ({ places, stamps, onStampAdded, onBack }) => {
 
             onStampAdded(newStamp);
             alert(`🎉 ${place.name} 스탬프를 획득했습니다!`);
+
+            // 마커 업데이트
+            createMarkers();
           } else {
             alert("올바른 장소의 QR 코드가 아닙니다.");
           }
@@ -58,7 +180,6 @@ const MapView: React.FC<Props> = ({ places, stamps, onStampAdded, onBack }) => {
     return () => window.removeEventListener("message", handleMessage);
   }, [places, stamps, onStampAdded]);
 
-  // QR 스캔 시작
   const handleQRScan = (place: RecommendedPlace) => {
     setSelectedPlace(place);
 
@@ -69,7 +190,6 @@ const MapView: React.FC<Props> = ({ places, stamps, onStampAdded, onBack }) => {
     }
   };
 
-  // 스탬프 찍었는지 확인
   const isStamped = (placeId: string) => {
     return stamps.some((s) => s.id === placeId);
   };
@@ -92,33 +212,39 @@ const MapView: React.FC<Props> = ({ places, stamps, onStampAdded, onBack }) => {
         </div>
       ) : (
         <>
-          {/* 지도 영역 (네이버 지도 들어갈 자리) */}
+          {/* 네이버 지도 */}
           <div className="bg-white rounded-2xl shadow-lg mb-4 overflow-hidden">
-            <div className="h-64 bg-gradient-to-br from-green-100 to-blue-100 flex items-center justify-center relative">
-              <div className="text-center">
-                <Navigation className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-                <p className="text-gray-500 font-semibold">
-                  네이버 지도가 여기 표시됩니다
-                </p>
-                <p className="text-xs text-gray-400 mt-1">
-                  {places.length}개의 추천 장소
-                </p>
-              </div>
-
-              {/* 임시 마커들 */}
-              {places.map((place, index) => (
-                <div
-                  key={place.id}
-                  className="absolute bg-red-500 w-8 h-8 rounded-full flex items-center justify-center text-white font-bold shadow-lg"
-                  style={{
-                    top: `${30 + index * 20}%`,
-                    left: `${40 + index * 15}%`,
-                  }}>
-                  {index + 1}
-                </div>
-              ))}
-            </div>
+            <div
+              ref={mapRef}
+              className="w-full h-80"
+              style={{ minHeight: "320px" }}
+            />
           </div>
+
+          {/* 선택된 장소 정보 */}
+          {selectedPlace && (
+            <div className="bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl p-5 shadow-xl mb-4 text-white">
+              <div className="flex items-center gap-3 mb-3">
+                <MapPin className="w-6 h-6" />
+                <h3 className="text-xl font-bold">{selectedPlace.name}</h3>
+              </div>
+              <p className="text-white/90 text-sm mb-4">
+                {selectedPlace.description}
+              </p>
+              <button
+                onClick={() => handleQRScan(selectedPlace)}
+                disabled={isStamped(selectedPlace.id)}
+                className={`w-full py-3 rounded-xl font-bold transition-all ${
+                  isStamped(selectedPlace.id)
+                    ? "bg-white/30 text-white/50 cursor-not-allowed"
+                    : "bg-white text-blue-600 shadow-lg hover:shadow-xl active:scale-[0.98]"
+                }`}>
+                {isStamped(selectedPlace.id)
+                  ? "✓ 스탬프 획득 완료"
+                  : "QR 코드 스캔하기"}
+              </button>
+            </div>
+          )}
 
           {/* 장소 리스트 */}
           <div className="space-y-3">
@@ -128,13 +254,11 @@ const MapView: React.FC<Props> = ({ places, stamps, onStampAdded, onBack }) => {
               return (
                 <div
                   key={place.id}
-                  className={`bg-white rounded-2xl p-5 shadow-md transition-all ${
-                    stamped
-                      ? "border-2 border-green-400"
-                      : "border border-gray-200"
-                  }`}>
-                  {/* 헤더 */}
-                  <div className="flex items-start gap-4 mb-3">
+                  onClick={() => setSelectedPlace(place)}
+                  className={`bg-white rounded-2xl p-5 shadow-md transition-all cursor-pointer hover:shadow-lg ${
+                    selectedPlace?.id === place.id ? "ring-2 ring-blue-500" : ""
+                  } ${stamped ? "border-2 border-green-400" : "border border-gray-200"}`}>
+                  <div className="flex items-start gap-4">
                     <div
                       className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center font-bold text-white ${
                         stamped
@@ -160,27 +284,6 @@ const MapView: React.FC<Props> = ({ places, stamps, onStampAdded, onBack }) => {
                       </p>
                     </div>
                   </div>
-
-                  {/* 위치 정보 */}
-                  <div className="flex items-center gap-2 text-xs text-gray-500 mb-3">
-                    <MapPin className="w-4 h-4" />
-                    <span>
-                      위도: {place.latitude.toFixed(4)}, 경도:{" "}
-                      {place.longitude.toFixed(4)}
-                    </span>
-                  </div>
-
-                  {/* QR 스캔 버튼 */}
-                  <button
-                    onClick={() => handleQRScan(place)}
-                    disabled={stamped}
-                    className={`w-full py-3 rounded-xl font-bold transition-all ${
-                      stamped
-                        ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                        : "bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg hover:shadow-xl active:scale-[0.98]"
-                    }`}>
-                    {stamped ? "✓ 스탬프 획득 완료" : "QR 코드 스캔하기"}
-                  </button>
                 </div>
               );
             })}
@@ -192,9 +295,9 @@ const MapView: React.FC<Props> = ({ places, stamps, onStampAdded, onBack }) => {
               💡 스탬프 획득 방법
             </p>
             <ol className="text-xs text-blue-700 space-y-1">
-              <li>1. 추천 장소를 방문하세요</li>
-              <li>2. 장소에 있는 QR 코드를 찾으세요</li>
-              <li>3. "QR 코드 스캔하기" 버튼을 눌러 스캔하세요</li>
+              <li>1. 지도에서 마커를 클릭하거나 리스트 선택</li>
+              <li>2. 선택한 장소를 실제로 방문</li>
+              <li>3. "QR 코드 스캔하기" 버튼으로 스캔</li>
               <li>4. 스탬프를 모아 특별한 혜택을 받으세요!</li>
             </ol>
           </div>
