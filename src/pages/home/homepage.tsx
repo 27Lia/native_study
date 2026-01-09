@@ -3,7 +3,8 @@ import MapTab from "@components/MapTab";
 import NativeTab from "@components/NativeTab";
 import QRTab from "@components/QRTab";
 import { useEffect, useState } from "react";
-import { Camera, Map, ScanLine } from "lucide-react";
+import { Camera, Map, ScanLine, Flower2 } from "lucide-react";
+import ExpoTab from "@components/ExpoTab";
 
 declare global {
   interface Window {
@@ -14,7 +15,9 @@ declare global {
 }
 
 const Homepage = () => {
-  const [activeTab, setActiveTab] = useState<"native" | "map" | "qr">("native");
+  const [activeTab, setActiveTab] = useState<"native" | "map" | "qr" | "expo">(
+    "native",
+  );
   const [contacts, setContacts] = useState([]);
   const [photos, setPhotos] = useState<string[]>([]);
 
@@ -77,6 +80,7 @@ const Homepage = () => {
     { id: "native", label: "홈", icon: Camera },
     { id: "map", label: "지도", icon: Map },
     { id: "qr", label: "스캔", icon: ScanLine },
+    { id: "expo", label: "테스트", icon: Flower2 },
   ];
 
   return (
@@ -96,7 +100,7 @@ const Homepage = () => {
           </div>
 
           {/* 탭 네비게이션 */}
-          <div className="flex gap-1 pb-2 overflow-x-auto scrollbar-hide">
+          <div className="flex gap-1 pb-2 overflow-x-auto scrollbar-hide h-[40px]">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
@@ -148,6 +152,13 @@ const Homepage = () => {
             activeTab === "qr" ? "opacity-100" : "opacity-0 hidden"
           }`}>
           {activeTab === "qr" && <QRTab />}
+        </div>
+
+        <div
+          className={`transition-opacity duration-300 ${
+            activeTab === "expo" ? "opacity-100" : "opacity-0 hidden"
+          }`}>
+          {activeTab === "expo" && <ExpoTab />}
         </div>
       </div>
     </div>
