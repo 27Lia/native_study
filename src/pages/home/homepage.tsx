@@ -105,7 +105,7 @@ const Homepage = () => {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as typeof activeTab)}
-                  className={`flex items-center gap-2 px-4 py-2.5 rounded-full font-semibold text-sm whitespace-nowrap transition-all ${
+                  className={`w-[50px] flex items-center gap-2 px-4 py-2.5 rounded-full font-semibold text-sm whitespace-nowrap transition-all ${
                     isActive
                       ? "bg-blue-500 text-white shadow-lg shadow-blue-500/30"
                       : "text-gray-600 hover:bg-gray-100"
