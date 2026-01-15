@@ -247,17 +247,6 @@ const FatigueCheck: React.FC<Props> = ({ onComplete }) => {
                 </div>
               </div>
             )}
-
-            {/* 안내 메시지 (스캔 50% 미만) */}
-            {vitalSigns.scanProgress < 50 && (
-              <div className="absolute bottom-4 left-4 right-4 z-10">
-                <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4">
-                  <p className="text-center text-gray-800 font-medium">
-                    📸 얼굴을 카메라에 맞춰주세요
-                  </p>
-                </div>
-              </div>
-            )}
           </div>
 
           {/* 하단: 생체신호 + 입력폼 */}
