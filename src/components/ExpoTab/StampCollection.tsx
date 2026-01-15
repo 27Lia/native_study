@@ -4,10 +4,9 @@ import type { Stamp } from "./index";
 
 interface Props {
   stamps: Stamp[];
-  onBack: () => void;
 }
 
-const StampCollection: React.FC<Props> = ({ stamps, onBack }) => {
+const StampCollection: React.FC<Props> = ({ stamps }) => {
   // 날짜별로 그룹화
   const groupedStamps = stamps.reduce(
     (acc, stamp) => {
@@ -27,10 +26,6 @@ const StampCollection: React.FC<Props> = ({ stamps, onBack }) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-orange-50 p-4">
-      <button onClick={onBack} className="text-blue-600 font-semibold mb-4">
-        ← 돌아가기
-      </button>
-
       {/* 헤더 */}
       <div className="bg-gradient-to-r from-yellow-400 to-orange-500 rounded-3xl p-6 shadow-xl mb-6">
         <div className="flex items-center gap-3 mb-2">

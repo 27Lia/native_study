@@ -6,7 +6,6 @@ interface Props {
   places: RecommendedPlace[];
   stamps: Stamp[];
   onStampAdded: (stamp: Stamp) => void;
-  onBack: () => void;
 }
 
 // 네이버 지도 타입 선언
@@ -16,7 +15,7 @@ declare global {
   }
 }
 
-const MapView: React.FC<Props> = ({ places, stamps, onStampAdded, onBack }) => {
+const MapView: React.FC<Props> = ({ places, stamps, onStampAdded }) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const naverMapRef = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
@@ -196,10 +195,6 @@ const MapView: React.FC<Props> = ({ places, stamps, onStampAdded, onBack }) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-4">
-      <button onClick={onBack} className="text-blue-600 font-semibold mb-4">
-        ← 돌아가기
-      </button>
-
       <h2 className="text-2xl font-bold text-gray-900 mb-4">추천 힐링 스팟</h2>
 
       {places.length === 0 ? (
@@ -287,19 +282,6 @@ const MapView: React.FC<Props> = ({ places, stamps, onStampAdded, onBack }) => {
                 </div>
               );
             })}
-          </div>
-
-          {/* 하단 안내 */}
-          <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4 mt-4">
-            <p className="text-sm text-blue-900 font-semibold mb-2">
-              💡 스탬프 획득 방법
-            </p>
-            <ol className="text-xs text-blue-700 space-y-1">
-              <li>1. 지도에서 마커를 클릭하거나 리스트 선택</li>
-              <li>2. 선택한 장소를 실제로 방문</li>
-              <li>3. "QR 코드 스캔하기" 버튼으로 스캔</li>
-              <li>4. 스탬프를 모아 특별한 혜택을 받으세요!</li>
-            </ol>
           </div>
         </>
       )}

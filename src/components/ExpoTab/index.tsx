@@ -3,6 +3,7 @@ import { Camera, MapPin, Award, Sparkles } from "lucide-react";
 import FatigueCheck from "./FatigueCheck";
 import StampCollection from "./StampCollection";
 import MapView from "./MapView";
+import { useNavigate } from "react-router-dom";
 
 // 타입 정의
 export interface Stamp {
@@ -30,6 +31,7 @@ const ExpoTab = () => {
   const [currentView, setCurrentView] = useState<
     "home" | "fatigue" | "map" | "stamps"
   >("home");
+  const navigate = useNavigate();
 
   // localStorage에서 데이터 불러오기
   useEffect(() => {
@@ -60,12 +62,7 @@ const ExpoTab = () => {
 
   // 뷰 전환
   if (currentView === "fatigue") {
-    return (
-      <FatigueCheck
-        onComplete={handleFatigueComplete}
-        onBack={() => setCurrentView("home")}
-      />
-    );
+    return <FatigueCheck onComplete={handleFatigueComplete} />;
   }
 
   if (currentView === "map") {
@@ -74,15 +71,12 @@ const ExpoTab = () => {
         places={places}
         stamps={stamps}
         onStampAdded={handleStampAdded}
-        onBack={() => setCurrentView("home")}
       />
     );
   }
 
   if (currentView === "stamps") {
-    return (
-      <StampCollection stamps={stamps} onBack={() => setCurrentView("home")} />
-    );
+    return <StampCollection stamps={stamps} />;
   }
 
   // 홈 화면
@@ -129,7 +123,7 @@ const ExpoTab = () => {
         <div className="space-y-3">
           {/* 피로도 측정 */}
           <button
-            onClick={() => setCurrentView("fatigue")}
+            onClick={() => navigate("/fatigueCheck")}
             className="w-full bg-white rounded-2xl p-5 shadow-md hover:shadow-xl transition-all border-2 border-blue-100 active:scale-[0.98]">
             <div className="flex items-center gap-4">
               <div className="bg-gradient-to-br from-blue-400 to-blue-600 p-4 rounded-2xl shadow-lg">

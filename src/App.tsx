@@ -6,6 +6,7 @@ import RootLayout from "./_root/RootRayout";
 import NotFound from "./_root/pages/NotFound";
 import AuthLayout from "./_auth/AuthRayout";
 import AppTheme from "./theme";
+import FatigueCheck from "@components/ExpoTab/FatigueCheck";
 
 function App() {
   console.log(process.env.REACT_APP_BASE_URL);
@@ -19,6 +20,7 @@ function App() {
           {/* NOTE: 로그인없이 접근할 수 있는 페이지 */}
           <Route element={<RootLayout />}>
             <Route path="/login" element={<NotFound />} />
+            <Route path="/fatigueCheck" element={<FatigueCheck />} />
           </Route>
 
           {/* NOTE: 로그인해야 접근할 수 있는 페이지 */}
