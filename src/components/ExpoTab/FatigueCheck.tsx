@@ -359,11 +359,15 @@ const FatigueCheck: React.FC<Props> = ({ onComplete }) => {
         </div>
       ) : (
         // 분석 완료 화면
+        // 문자도 보내야함
         <div className="flex items-center justify-center min-h-screen p-4">
           <div className="bg-white rounded-3xl p-8 shadow-xl text-center">
             <Loader2 className="w-16 h-16 text-purple-500 animate-spin mx-auto mb-4" />
             <h3 className="text-xl font-bold text-gray-900 mb-2">분석 완료!</h3>
-            <p className="text-gray-600">맞춤형 장소를 추천하고 있습니다...</p>
+            <p className="text-gray-600">
+              분석 결과 현재 당신의 상태는 활력이 있는 상태입니다． 당신께
+              어울리는 ‘라벤더’를 직접 만나볼까요!!
+            </p>
           </div>
         </div>
       )}
