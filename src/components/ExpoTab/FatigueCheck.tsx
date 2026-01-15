@@ -223,31 +223,11 @@ const FatigueCheck: React.FC<Props> = ({ onComplete }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 overflow-hidden">
       {step === "scanning" ? (
         <div className="flex flex-col h-screen">
           {/* 화면의 60% 높이 */}
-          <div className="h-[60vh] bg-transparent relative">
-            {/* 스캔 진행률 오버레이 */}
-            {vitalSigns.scanProgress > 0 && (
-              <div className="absolute top-4 left-4 right-4 z-10">
-                <div className="bg-black/50 backdrop-blur-sm rounded-xl p-3">
-                  <div className="flex justify-between text-white text-xs mb-2">
-                    <span>스캔 진행률</span>
-                    <span className="font-bold">
-                      {vitalSigns.scanProgress}%
-                    </span>
-                  </div>
-                  <div className="w-full h-2 bg-white/20 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-300"
-                      style={{ width: `${vitalSigns.scanProgress}%` }}
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
+          <div className="h-[60vh] bg-transparent relative"></div>
 
           {/* 하단: 생체신호 + 입력폼 */}
           <div className="flex-1 bg-white p-6 space-y-4 overflow-y-auto">
