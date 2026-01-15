@@ -226,14 +226,8 @@ const FatigueCheck: React.FC<Props> = ({ onComplete }) => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
       {step === "scanning" ? (
         <div className="flex flex-col h-screen">
-          {/* 상단: 카메라 영역 - 크기 조절 */}
-          <div className="h-[60vh] bg-black relative">
-            {" "}
-            {/* 화면의 60% 높이 */}
-            {/* 카메라 플레이스홀더 */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <p className="text-white/50 text-sm">카메라가 여기 표시됩니다</p>
-            </div>
+          {/* 화면의 60% 높이 */}
+          <div className="h-[60vh] bg-transparent relative">
             {/* 스캔 진행률 오버레이 */}
             {vitalSigns.scanProgress > 0 && (
               <div className="absolute top-4 left-4 right-4 z-10">
@@ -253,6 +247,7 @@ const FatigueCheck: React.FC<Props> = ({ onComplete }) => {
                 </div>
               </div>
             )}
+
             {/* 안내 메시지 (스캔 50% 미만) */}
             {vitalSigns.scanProgress < 50 && (
               <div className="absolute bottom-4 left-4 right-4 z-10">
