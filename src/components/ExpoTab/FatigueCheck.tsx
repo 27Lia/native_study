@@ -226,14 +226,36 @@ const FatigueCheck: React.FC<Props> = ({ onComplete }) => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
       {step === "scanning" ? (
         <div className="flex flex-col h-screen">
-          <div ref={cameraAreaRef} className="flex-1 bg-black relative">
+          {/* 상단: 카메라 영역 - 크기 조절 */}
+          <div className="h-[60vh] bg-black relative">
+            {" "}
+            {/* 화면의 60% 높이 */}
             {/* 카메라 플레이스홀더 */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <p className="text-white/50 text-sm">카메라 영역</p>
+              <p className="text-white/50 text-sm">카메라가 여기 표시됩니다</p>
             </div>
+            {/* 스캔 진행률 오버레이 */}
+            {vitalSigns.scanProgress > 0 && (
+              <div className="absolute top-4 left-4 right-4 z-10">
+                <div className="bg-black/50 backdrop-blur-sm rounded-xl p-3">
+                  <div className="flex justify-between text-white text-xs mb-2">
+                    <span>스캔 진행률</span>
+                    <span className="font-bold">
+                      {vitalSigns.scanProgress}%
+                    </span>
+                  </div>
+                  <div className="w-full h-2 bg-white/20 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-300"
+                      style={{ width: `${vitalSigns.scanProgress}%` }}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
             {/* 안내 메시지 (스캔 50% 미만) */}
             {vitalSigns.scanProgress < 50 && (
-              <div className="absolute bottom-4 left-4 right-4">
+              <div className="absolute bottom-4 left-4 right-4 z-10">
                 <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4">
                   <p className="text-center text-gray-800 font-medium">
                     📸 얼굴을 카메라에 맞춰주세요
@@ -244,8 +266,8 @@ const FatigueCheck: React.FC<Props> = ({ onComplete }) => {
           </div>
 
           {/* 하단: 생체신호 + 입력폼 */}
-          <div className="bg-white rounded-t-3xl shadow-2xl p-6 space-y-4">
-            <h2 className="text-xl font-bold text-gray-900 text-center mb-4">
+          <div className="flex-1 bg-white p-6 space-y-4 overflow-y-auto">
+            <h2 className="text-xl font-bold text-gray-900 text-center">
               현재 당신의 기분에 맞는 꽃을 알려드릴게요
             </h2>
 
@@ -340,13 +362,11 @@ const FatigueCheck: React.FC<Props> = ({ onComplete }) => {
         </div>
       ) : (
         // 분석 완료 화면
-        // 문자도 보내야함
         <div className="flex items-center justify-center min-h-screen p-4">
           <div className="bg-white rounded-3xl p-8 shadow-xl text-center">
-            <p className="text-gray-600">
-              분석 결과 현재 당신의 상태는 활력이 있는 상태입니다． 당신께
-              어울리는 ‘라벤더’를 직접 만나볼까요!!
-            </p>
+            <Loader2 className="w-16 h-16 text-purple-500 animate-spin mx-auto mb-4" />
+            <h3 className="text-xl font-bold text-gray-900 mb-2">분석 완료!</h3>
+            <p className="text-gray-600">맞춤형 장소를 추천하고 있습니다...</p>
           </div>
         </div>
       )}
