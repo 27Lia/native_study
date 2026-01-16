@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { User, Phone } from "lucide-react";
 import type { RecommendedPlace } from "./index";
-import { useNavigate } from "react-router-dom";
 
 interface Props {
   onComplete?: (places: RecommendedPlace[]) => void;
@@ -26,7 +25,6 @@ const FatigueCheck: React.FC<Props> = ({ onComplete }) => {
   });
 
   const scanIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const navigate = useNavigate();
 
   // 컴포넌트 마운트 시 바로 카메라 시작
   useEffect(() => {

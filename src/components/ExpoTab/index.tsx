@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Camera, MapPin, Sparkles } from "lucide-react";
 import FatigueCheck from "./FatigueCheck";
 import MapView from "./MapView";
 import { useNavigate } from "react-router-dom";
@@ -79,13 +78,10 @@ const ExpoTab = () => {
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
       <div className="space-y-4">
         {/* 메인 헤더 */}
-        <div className="bg-gradient-to-r from-green-500 to-blue-500 rounded-3xl p-6 shadow-xl">
-          <div className="flex items-center gap-3 mb-2">
-            <Sparkles className="w-8 h-8 text-white" />
-            <h2 className="text-2xl font-bold text-white">
-              태안국제원예 치유박람회
-            </h2>
-          </div>
+        <div className="flex items-center gap-3 mb-2">
+          <h2 className="text-2xl font-bold text-black">
+            태안국제원예 치유박람회
+          </h2>
         </div>
 
         {/* 기능 버튼들 */}
@@ -95,9 +91,6 @@ const ExpoTab = () => {
             onClick={() => navigate("/fatigueCheck")}
             className="w-full bg-white rounded-2xl p-5 shadow-md hover:shadow-xl transition-all border-2 border-blue-100 active:scale-[0.98]">
             <div className="flex items-center gap-4">
-              <div className="bg-gradient-to-br from-blue-400 to-blue-600 p-4 rounded-2xl shadow-lg">
-                <Camera className="w-7 h-7 text-white" />
-              </div>
               <div className="flex-1 text-left">
                 <h3 className="text-lg font-bold text-gray-900 mb-1">
                   피로도 측정하기
@@ -114,9 +107,6 @@ const ExpoTab = () => {
             onClick={() => setCurrentView("map")}
             className="w-full bg-white rounded-2xl p-5 shadow-md hover:shadow-xl transition-all border-2 border-green-100 active:scale-[0.98]">
             <div className="flex items-center gap-4">
-              <div className="bg-gradient-to-br from-green-400 to-green-600 p-4 rounded-2xl shadow-lg">
-                <MapPin className="w-7 h-7 text-white" />
-              </div>
               <div className="flex-1 text-left">
                 <h3 className="text-lg font-bold text-gray-900 mb-1">
                   추천 장소 보기
