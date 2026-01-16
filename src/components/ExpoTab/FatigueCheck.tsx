@@ -223,10 +223,6 @@ const FatigueCheck: React.FC<Props> = ({ onComplete }) => {
               className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-4 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed">
               확인
             </button>
-            {/* 안내 문구 */}
-            <p className="text-xs text-center text-gray-500">
-              ※ 확인 클릭 시 개인정보 수집 및 이용에 동의하는 것으로 간주합니다
-            </p>
           </div>
         </div>
       ) : (
