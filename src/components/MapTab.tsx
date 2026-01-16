@@ -7,14 +7,6 @@ const MapTab = () => {
     lng: number;
   } | null>(null);
   const [loading, setLoading] = useState(false);
-  const [debugLog, setDebugLog] = useState<string[]>([]);
-
-  // 디버그 로그 추가 함수
-  const addLog = (message: string) => {
-    setDebugLog((prev) =>
-      [...prev, `${new Date().toLocaleTimeString()}: ${message}`].slice(-10),
-    ); // 최근 10개만
-  };
 
   // RN에서 위치 정보 받기
   useEffect(() => {
@@ -25,27 +17,21 @@ const MapTab = () => {
           typeof messageEvent.data === "string"
             ? JSON.parse(messageEvent.data) // 문자열이면 파싱
             : messageEvent.data; // 이미 객체면 그대로
-        addLog(`메시지 받음: ${data.type}`);
 
         if (data.type === "LOCATION_RESULT") {
-          addLog(`위치 성공: ${data.data.latitude}, ${data.data.longitude}`);
-
           setMyLocation({
             lat: data.data.latitude,
             lng: data.data.longitude,
           });
           setLoading(false);
         } else if (data.type === "LOCATION_ERROR") {
-          addLog(`위치 에러: ${data.data}`);
           setLoading(false);
         }
       } catch (e) {
         console.error("메시지 파싱 에러:", e);
-        addLog(`파싱 에러: ${e}`);
         setLoading(false);
       }
     };
-    addLog("이벤트 리스너 등록");
     window.addEventListener("message", handleMessage as EventListener);
     document.addEventListener("message", handleMessage as EventListener);
 
@@ -58,17 +44,13 @@ const MapTab = () => {
   // RN에 위치 요청
   const getMyLocation = () => {
     setLoading(true);
-    addLog("위치 요청 시작");
 
     if (window.ReactNativeWebView) {
-      addLog("ReactNativeWebView 존재 - 메시지 전송");
-
       // RN에 위치 요청
       window.ReactNativeWebView.postMessage(
         JSON.stringify({ type: "GET_LOCATION" }),
       );
     } else {
-      addLog("ReactNativeWebView 없음!");
       setLoading(false);
     }
   };
