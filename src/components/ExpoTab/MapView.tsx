@@ -23,41 +23,6 @@ const MapView: React.FC<Props> = ({ places, stamps, onStampAdded }) => {
     null,
   );
 
-  // 네이버 지도 초기화
-  useEffect(() => {
-    if (!mapRef.current || !window.naver) return;
-
-    // 기본 중심 좌표 (태안)
-    const defaultCenter = new window.naver.maps.LatLng(36.7458, 126.2986);
-
-    // 지도 생성
-    const mapOptions = {
-      center:
-        places && places.length > 0
-          ? new window.naver.maps.LatLng(
-              places?.[0].latitude,
-              places?.[0].longitude,
-            )
-          : defaultCenter,
-      zoom: 14,
-      zoomControl: true,
-      zoomControlOptions: {
-        position: window.naver.maps.Position.TOP_RIGHT,
-      },
-    };
-
-    naverMapRef.current = new window.naver.maps.Map(mapRef.current, mapOptions);
-
-    // 마커 생성
-    createMarkers();
-
-    return () => {
-      // 마커 정리
-      markersRef.current.forEach((marker) => marker.setMap(null));
-      markersRef.current = [];
-    };
-  }, [places]);
-
   const handleQRScan = (place: RecommendedPlace) => {
     setSelectedPlace(place);
 
@@ -151,6 +116,41 @@ const MapView: React.FC<Props> = ({ places, stamps, onStampAdded }) => {
       markersRef.current.push(marker);
     });
   }, [places, isStamped]);
+
+  // 네이버 지도 초기화
+  useEffect(() => {
+    if (!mapRef.current || !window.naver) return;
+
+    // 기본 중심 좌표 (태안)
+    const defaultCenter = new window.naver.maps.LatLng(36.7458, 126.2986);
+
+    // 지도 생성
+    const mapOptions = {
+      center:
+        places && places.length > 0
+          ? new window.naver.maps.LatLng(
+              places?.[0].latitude,
+              places?.[0].longitude,
+            )
+          : defaultCenter,
+      zoom: 14,
+      zoomControl: true,
+      zoomControlOptions: {
+        position: window.naver.maps.Position.TOP_RIGHT,
+      },
+    };
+
+    naverMapRef.current = new window.naver.maps.Map(mapRef.current, mapOptions);
+
+    // 마커 생성
+    createMarkers();
+
+    return () => {
+      // 마커 정리
+      markersRef.current.forEach((marker) => marker.setMap(null));
+      markersRef.current = [];
+    };
+  }, [places, createMarkers]);
 
   // QR 스캔 결과 받기
   useEffect(() => {
