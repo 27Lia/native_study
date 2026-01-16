@@ -15,13 +15,34 @@ declare global {
   }
 }
 
-const MapView: React.FC<Props> = ({ places, stamps }) => {
+const MapView: React.FC<Props> = ({ stamps }) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const naverMapRef = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<RecommendedPlace | null>(
     null,
   );
+
+  const places = [
+    {
+      id: "place_01",
+      name: "컬처관",
+      latitude: 36.7458,
+      longitude: 126.2986,
+      markerImage: "https://via.placeholder.com/100",
+      fatigueLevel: "high" as const,
+      description: "설명",
+    },
+    {
+      id: "place_02",
+      name: "힐링스토어",
+      latitude: 36.7468,
+      longitude: 126.2996,
+      markerImage: "https://via.placeholder.com/100",
+      fatigueLevel: "medium" as const,
+      description: "설명2",
+    },
+  ];
 
   const isStamped = useCallback(
     (placeId: string) => {
