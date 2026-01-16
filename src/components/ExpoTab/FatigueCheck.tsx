@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Loader2, User, Phone } from "lucide-react";
 import type { RecommendedPlace } from "./index";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   onComplete?: (places: RecommendedPlace[]) => void;
@@ -28,6 +29,7 @@ const FatigueCheck: React.FC<Props> = ({ onComplete }) => {
   const [stressHistory, setStressHistory] = useState<number[]>([]);
   const scanIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const cameraAreaRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   // 컴포넌트 마운트 시 바로 카메라 시작
   useEffect(() => {
@@ -326,12 +328,14 @@ const FatigueCheck: React.FC<Props> = ({ onComplete }) => {
         </div>
       ) : (
         // 분석 완료 화면
-        <div className="flex items-center justify-center min-h-screen p-4">
-          <div className="bg-white rounded-3xl p-8 shadow-xl text-center">
-            <Loader2 className="w-16 h-16 text-purple-500 animate-spin mx-auto mb-4" />
-            <h3 className="text-xl font-bold text-gray-900 mb-2">분석 완료!</h3>
-            <p className="text-gray-600">맞춤형 장소를 추천하고 있습니다...</p>
-          </div>
+        <div className="flex flex-col items-center justify-center min-h-screen p-4">
+          <h3 className="text-xl font-bold text-gray-900 mb-2">
+            분석 완료! 문자전송, 일정시간 후 다음화면 전환
+          </h3>
+
+          <button>
+            <div onClick={() => navigate("/map")}> 지도이동 버튼</div>
+          </button>
         </div>
       )}
     </div>

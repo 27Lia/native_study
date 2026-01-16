@@ -3,9 +3,9 @@ import { MapPin, Navigation, Award } from "lucide-react";
 import type { RecommendedPlace, Stamp } from "./index";
 
 interface Props {
-  places: RecommendedPlace[];
-  stamps: Stamp[];
-  onStampAdded: (stamp: Stamp) => void;
+  places?: RecommendedPlace[];
+  stamps?: Stamp[];
+  onStampAdded?: (stamp: Stamp) => void;
 }
 
 // 네이버 지도 타입 선언
@@ -33,10 +33,10 @@ const MapView: React.FC<Props> = ({ places, stamps, onStampAdded }) => {
     // 지도 생성
     const mapOptions = {
       center:
-        places.length > 0
+        places && places.length > 0
           ? new window.naver.maps.LatLng(
-              places[0].latitude,
-              places[0].longitude,
+              places?.[0].latitude,
+              places?.[0].longitude,
             )
           : defaultCenter,
       zoom: 14,
@@ -66,7 +66,7 @@ const MapView: React.FC<Props> = ({ places, stamps, onStampAdded }) => {
     markersRef.current.forEach((marker) => marker.setMap(null));
     markersRef.current = [];
 
-    places.forEach((place, index) => {
+    places?.forEach((place, index) => {
       const stamped = isStamped(place.id);
 
       // 커스텀 마커 HTML
@@ -142,10 +142,10 @@ const MapView: React.FC<Props> = ({ places, stamps, onStampAdded }) => {
         const data = JSON.parse(event.data);
 
         if (data.type === "QR_SCAN_RESULT") {
-          const place = places.find((p) => p.id === data.data);
+          const place = places?.find((p) => p.id === data.data);
 
           if (place) {
-            const alreadyStamped = stamps.some((s) => s.id === place.id);
+            const alreadyStamped = stamps?.some((s) => s.id === place.id);
 
             if (alreadyStamped) {
               alert("이미 방문한 장소입니다!");
@@ -161,7 +161,7 @@ const MapView: React.FC<Props> = ({ places, stamps, onStampAdded }) => {
               longitude: place.longitude,
             };
 
-            onStampAdded(newStamp);
+            onStampAdded && onStampAdded(newStamp);
             alert(`🎉 ${place.name} 스탬프를 획득했습니다!`);
 
             // 마커 업데이트
@@ -190,14 +190,16 @@ const MapView: React.FC<Props> = ({ places, stamps, onStampAdded }) => {
   };
 
   const isStamped = (placeId: string) => {
-    return stamps.some((s) => s.id === placeId);
+    return stamps?.some((s) => s.id === placeId);
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-4">
-      <h2 className="text-2xl font-bold text-gray-900 mb-4">추천 힐링 스팟</h2>
+      <h2 className="text-2xl font-bold text-gray-900 mb-4">
+        당신에게 어울리는 꽃을 만나러 가보세요!!
+      </h2>
 
-      {places.length === 0 ? (
+      {places?.length === 0 ? (
         <div className="bg-white rounded-2xl p-8 text-center shadow-md">
           <MapPin className="w-16 h-16 text-gray-300 mx-auto mb-4" />
           <p className="text-gray-500 font-semibold">추천 장소가 없습니다</p>
@@ -243,7 +245,7 @@ const MapView: React.FC<Props> = ({ places, stamps, onStampAdded }) => {
 
           {/* 장소 리스트 */}
           <div className="space-y-3">
-            {places.map((place, index) => {
+            {places?.map((place, index) => {
               const stamped = isStamped(place.id);
 
               return (
