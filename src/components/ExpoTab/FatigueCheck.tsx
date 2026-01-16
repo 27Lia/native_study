@@ -152,21 +152,21 @@ const FatigueCheck: React.FC<Props> = ({ onComplete }) => {
       const mockPlaces: RecommendedPlace[] = [
         {
           id: "place_01",
-          name: "힐링 가든",
+          name: "컬처관",
           latitude: 36.7458,
           longitude: 126.2986,
           markerImage: "https://via.placeholder.com/100",
           fatigueLevel: "high",
-          description: "피로도가 높아 휴식이 필요한 공간",
+          description: "설명",
         },
         {
           id: "place_02",
-          name: "명상의 숲",
+          name: "힐링스토어",
           latitude: 36.7468,
           longitude: 126.2996,
           markerImage: "https://via.placeholder.com/100",
           fatigueLevel: "medium",
-          description: "조용한 산책로와 명상 공간",
+          description: "설명2",
         },
       ];
       onComplete && onComplete(mockPlaces);

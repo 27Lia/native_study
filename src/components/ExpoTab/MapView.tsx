@@ -231,18 +231,6 @@ const MapView: React.FC<Props> = ({ places, stamps, onStampAdded }) => {
               <p className="text-white/90 text-sm mb-4">
                 {selectedPlace.description}
               </p>
-              <button
-                onClick={() => handleQRScan(selectedPlace)}
-                disabled={isStamped(selectedPlace.id)}
-                className={`w-full py-3 rounded-xl font-bold transition-all ${
-                  isStamped(selectedPlace.id)
-                    ? "bg-white/30 text-white/50 cursor-not-allowed"
-                    : "bg-white text-blue-600 shadow-lg hover:shadow-xl active:scale-[0.98]"
-                }`}>
-                {isStamped(selectedPlace.id)
-                  ? "✓ 스탬프 획득 완료"
-                  : "QR 코드 스캔하기"}
-              </button>
             </div>
           )}
 
