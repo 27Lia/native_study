@@ -7,6 +7,14 @@ const MapTab = () => {
     lng: number;
   } | null>(null);
   const [loading, setLoading] = useState(false);
+  const [debugLog, setDebugLog] = useState<string[]>([]);
+
+  // 디버그 로그 추가 함수
+  const addLog = (message: string) => {
+    setDebugLog((prev) =>
+      [...prev, `${new Date().toLocaleTimeString()}: ${message}`].slice(-10),
+    ); // 최근 10개만
+  };
 
   // RN에서 위치 정보 받기
   useEffect(() => {
@@ -14,20 +22,27 @@ const MapTab = () => {
       try {
         const messageEvent = event as MessageEvent;
         const data = JSON.parse(messageEvent.data);
+        addLog(`메시지 받음: ${data.type}`);
 
         if (data.type === "LOCATION_RESULT") {
+          addLog(`위치 성공: ${data.data.latitude}, ${data.data.longitude}`);
+
           setMyLocation({
             lat: data.data.latitude,
             lng: data.data.longitude,
           });
           setLoading(false);
+        } else if (data.type === "LOCATION_ERROR") {
+          addLog(`위치 에러: ${data.data}`);
+          setLoading(false);
         }
       } catch (e) {
         console.error("메시지 파싱 에러:", e);
+        addLog(`파싱 에러: ${e}`);
         setLoading(false);
       }
     };
-
+    addLog("이벤트 리스너 등록");
     window.addEventListener("message", handleMessage as EventListener);
     document.addEventListener("message", handleMessage as EventListener);
 
@@ -40,17 +55,51 @@ const MapTab = () => {
   // RN에 위치 요청
   const getMyLocation = () => {
     setLoading(true);
+    addLog("위치 요청 시작");
 
     if (window.ReactNativeWebView) {
+      addLog("ReactNativeWebView 존재 - 메시지 전송");
+
       // RN에 위치 요청
       window.ReactNativeWebView.postMessage(
         JSON.stringify({ type: "GET_LOCATION" }),
       );
+    } else {
+      addLog("ReactNativeWebView 없음!");
+      setLoading(false);
     }
   };
 
   return (
     <div className="space-y-4">
+      {/* 디버그 패널 - 개발용 */}
+      <div className="bg-gray-900 text-green-400 rounded-2xl p-4 font-mono text-xs max-h-60 overflow-y-auto">
+        <div className="flex justify-between items-center mb-2">
+          <p className="font-bold text-white">디버그 로그</p>
+          <button
+            onClick={() => setDebugLog([])}
+            className="text-xs bg-gray-700 px-2 py-1 rounded">
+            Clear
+          </button>
+        </div>
+        {debugLog.length === 0 ? (
+          <p className="text-gray-500">로그 없음</p>
+        ) : (
+          debugLog.map((log, i) => (
+            <p key={i} className="border-b border-gray-800 py-1">
+              {log}
+            </p>
+          ))
+        )}
+        {myLocation && (
+          <div className="mt-2 pt-2 border-t border-gray-700">
+            <p className="text-yellow-400">현재 위치:</p>
+            <p>Lat: {myLocation.lat}</p>
+            <p>Lng: {myLocation.lng}</p>
+          </div>
+        )}
+      </div>
+
       {/* 내 위치 버튼 */}
       <button
         onClick={getMyLocation}
