@@ -58,6 +58,23 @@ const MapView: React.FC<Props> = ({ places, stamps, onStampAdded }) => {
     };
   }, [places]);
 
+  const handleQRScan = (place: RecommendedPlace) => {
+    setSelectedPlace(place);
+
+    if (window.ReactNativeWebView) {
+      window.ReactNativeWebView.postMessage(
+        JSON.stringify({ type: "OPEN_QR_SCANNER" }),
+      );
+    }
+  };
+
+  const isStamped = useCallback(
+    (placeId: string) => {
+      return stamps?.some((s) => s.id === placeId);
+    },
+    [stamps],
+  );
+
   // 마커 생성 함수
   const createMarkers = useCallback(() => {
     if (!naverMapRef.current || !window.naver) return;
@@ -133,7 +150,7 @@ const MapView: React.FC<Props> = ({ places, stamps, onStampAdded }) => {
 
       markersRef.current.push(marker);
     });
-  }, [places, stamps]);
+  }, [places, isStamped]);
 
   // QR 스캔 결과 받기
   useEffect(() => {
@@ -178,20 +195,6 @@ const MapView: React.FC<Props> = ({ places, stamps, onStampAdded }) => {
     window.addEventListener("message", handleMessage);
     return () => window.removeEventListener("message", handleMessage);
   }, [places, stamps, onStampAdded, createMarkers]);
-
-  const handleQRScan = (place: RecommendedPlace) => {
-    setSelectedPlace(place);
-
-    if (window.ReactNativeWebView) {
-      window.ReactNativeWebView.postMessage(
-        JSON.stringify({ type: "OPEN_QR_SCANNER" }),
-      );
-    }
-  };
-
-  const isStamped = (placeId: string) => {
-    return stamps?.some((s) => s.id === placeId);
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-4">
