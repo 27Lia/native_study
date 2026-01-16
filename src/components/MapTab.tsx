@@ -75,34 +75,6 @@ const MapTab = () => {
 
   return (
     <div className="space-y-4">
-      {/* 디버그 패널 - 개발용 */}
-      <div className="bg-gray-900 text-green-400 rounded-2xl p-4 font-mono text-xs max-h-60 overflow-y-auto">
-        <div className="flex justify-between items-center mb-2">
-          <p className="font-bold text-white">디버그 로그</p>
-          <button
-            onClick={() => setDebugLog([])}
-            className="text-xs bg-gray-700 px-2 py-1 rounded">
-            Clear
-          </button>
-        </div>
-        {debugLog.length === 0 ? (
-          <p className="text-gray-500">로그 없음</p>
-        ) : (
-          debugLog.map((log, i) => (
-            <p key={i} className="border-b border-gray-800 py-1">
-              {log}
-            </p>
-          ))
-        )}
-        {myLocation && (
-          <div className="mt-2 pt-2 border-t border-gray-700">
-            <p className="text-yellow-400">현재 위치:</p>
-            <p>Lat: {myLocation.lat}</p>
-            <p>Lng: {myLocation.lng}</p>
-          </div>
-        )}
-      </div>
-
       {/* 내 위치 버튼 */}
       <button
         onClick={getMyLocation}
