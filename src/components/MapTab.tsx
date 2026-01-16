@@ -21,7 +21,10 @@ const MapTab = () => {
     const handleMessage = (event: Event) => {
       try {
         const messageEvent = event as MessageEvent;
-        const data = JSON.parse(messageEvent.data);
+        const data =
+          typeof messageEvent.data === "string"
+            ? JSON.parse(messageEvent.data) // 문자열이면 파싱
+            : messageEvent.data; // 이미 객체면 그대로
         addLog(`메시지 받음: ${data.type}`);
 
         if (data.type === "LOCATION_RESULT") {
