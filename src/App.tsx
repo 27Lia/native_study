@@ -7,7 +7,6 @@ import NotFound from "./_root/pages/NotFound";
 import AuthLayout from "./_auth/AuthRayout";
 import AppTheme from "./theme";
 import FatigueCheck from "@components/ExpoTab/FatigueCheck";
-import MapView from "@components/ExpoTab/MapView";
 
 function App() {
   console.log(process.env.REACT_APP_BASE_URL);
@@ -22,7 +21,6 @@ function App() {
           <Route element={<RootLayout />}>
             <Route path="/login" element={<NotFound />} />
             <Route path="/fatigueCheck" element={<FatigueCheck />} />
-            <Route path="/map" element={<MapView />} />
           </Route>
 
           {/* NOTE: 로그인해야 접근할 수 있는 페이지 */}

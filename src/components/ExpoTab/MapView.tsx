@@ -15,7 +15,7 @@ declare global {
   }
 }
 
-const MapView: React.FC<Props> = ({ places, stamps, onStampAdded }) => {
+const MapView: React.FC<Props> = ({ places, stamps }) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const naverMapRef = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
@@ -142,50 +142,6 @@ const MapView: React.FC<Props> = ({ places, stamps, onStampAdded }) => {
     };
   }, [places, createMarkers]);
 
-  // QR 스캔 결과 받기
-  useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      try {
-        const data = JSON.parse(event.data);
-
-        if (data.type === "QR_SCAN_RESULT") {
-          const place = places?.find((p) => p.id === data.data);
-
-          if (place) {
-            const alreadyStamped = stamps?.some((s) => s.id === place.id);
-
-            if (alreadyStamped) {
-              alert("이미 방문한 장소입니다!");
-              return;
-            }
-
-            const newStamp: Stamp = {
-              id: place.id,
-              name: place.name,
-              timestamp: new Date().toISOString(),
-              qrData: data.data,
-              latitude: place.latitude,
-              longitude: place.longitude,
-            };
-
-            onStampAdded && onStampAdded(newStamp);
-            alert(`🎉 ${place.name} 스탬프를 획득했습니다!`);
-
-            // 마커 업데이트
-            createMarkers();
-          } else {
-            alert("올바른 장소의 QR 코드가 아닙니다.");
-          }
-        }
-      } catch (error) {
-        console.error("메시지 파싱 에러:", error);
-      }
-    };
-
-    window.addEventListener("message", handleMessage);
-    return () => window.removeEventListener("message", handleMessage);
-  }, [places, stamps, onStampAdded, createMarkers]);
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-4">
       <h2 className="text-2xl font-bold text-gray-900 mb-4">
@@ -210,19 +166,6 @@ const MapView: React.FC<Props> = ({ places, stamps, onStampAdded }) => {
               style={{ minHeight: "320px" }}
             />
           </div>
-
-          {/* 선택된 장소 정보 */}
-          {selectedPlace && (
-            <div className="bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl p-5 shadow-xl mb-4 text-white">
-              <div className="flex items-center gap-3 mb-3">
-                <MapPin className="w-6 h-6" />
-                <h3 className="text-xl font-bold">{selectedPlace.name}</h3>
-              </div>
-              <p className="text-white/90 text-sm mb-4">
-                {selectedPlace.description}
-              </p>
-            </div>
-          )}
 
           {/* 장소 리스트 */}
           <div className="space-y-3">
