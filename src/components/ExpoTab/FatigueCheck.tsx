@@ -24,9 +24,7 @@ const FatigueCheck: React.FC<Props> = ({ onComplete }) => {
     stress: 0,
     scanProgress: 0,
   });
-  const [heartRateHistory, setHeartRateHistory] = useState<number[]>([]);
-  const [breathingHistory, setBreathingHistory] = useState<number[]>([]);
-  const [stressHistory, setStressHistory] = useState<number[]>([]);
+
   const scanIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const navigate = useNavigate();
 
@@ -89,15 +87,6 @@ const FatigueCheck: React.FC<Props> = ({ onComplete }) => {
       };
 
       setVitalSigns(newVitalSigns);
-
-      // 그래프 히스토리 업데이트
-      setHeartRateHistory((prev) =>
-        [...prev, newVitalSigns.heartRate].slice(-20),
-      );
-      setBreathingHistory((prev) =>
-        [...prev, newVitalSigns.breathing].slice(-20),
-      );
-      setStressHistory((prev) => [...prev, newVitalSigns.stress].slice(-20));
     } catch (error) {
       console.error("API 호출 실패:", error);
     }
@@ -118,15 +107,6 @@ const FatigueCheck: React.FC<Props> = ({ onComplete }) => {
       };
 
       setVitalSigns(newVitalSigns);
-
-      // 그래프 히스토리 업데이트
-      setHeartRateHistory((prev) =>
-        [...prev, newVitalSigns.heartRate].slice(-20),
-      );
-      setBreathingHistory((prev) =>
-        [...prev, newVitalSigns.breathing].slice(-20),
-      );
-      setStressHistory((prev) => [...prev, newVitalSigns.stress].slice(-20));
 
       // 100% 도달 시 중지
       if (progress >= 100 && scanIntervalRef.current) {
