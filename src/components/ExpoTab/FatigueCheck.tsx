@@ -173,36 +173,6 @@ const FatigueCheck: React.FC<Props> = ({ onComplete }) => {
     }, 2000);
   };
 
-  // 그래프 그리기
-  const drawGraph = (data: number[], color: string) => {
-    if (data.length < 2) return null;
-
-    const max = Math.max(...data, 1);
-    const width = 100;
-    const height = 60;
-
-    const points = data
-      .map((value, index) => {
-        const x = (index / (data.length - 1)) * width;
-        const y = height - (value / max) * height;
-        return `${x},${y}`;
-      })
-      .join(" ");
-
-    return (
-      <svg width="100%" height="100%" viewBox={`0 0 ${width} ${height}`}>
-        <polyline
-          points={points}
-          fill="none"
-          stroke={color}
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    );
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 overflow-hidden">
       {step === "scanning" ? (
