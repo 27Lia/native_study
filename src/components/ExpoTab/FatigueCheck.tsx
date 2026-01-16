@@ -235,64 +235,7 @@ const FatigueCheck: React.FC<Props> = ({ onComplete }) => {
             <h2 className="text-xl font-bold text-gray-900 text-center">
               현재 당신의 기분에 맞는 꽃을 알려드릴게요
             </h2>
-            {/* 생체신호 표시 (50% 이상) */}
-            {/* {vitalSigns.scanProgress >= 50 && ( */}
-            //{" "}
-            <div className="grid grid-cols-3 gap-3 mb-4">
-              // {/* 맥박수 */}
-              //{" "}
-              <div className="bg-red-50 rounded-xl p-3">
-                // <div className="text-xs text-red-600 mb-1">심박</div>
-                //{" "}
-                <div className="h-12 mb-2">
-                  // {drawGraph(heartRateHistory, "#ef4444")}
-                  //{" "}
-                </div>
-                //{" "}
-                <div className="text-2xl font-bold text-red-500">
-                  // {vitalSigns.heartRate}
-                  //{" "}
-                </div>
-                // <div className="text-xs text-gray-500">BPM</div>
-                //{" "}
-              </div>
-              // {/* 호흡수 */}
-              //{" "}
-              <div className="bg-blue-50 rounded-xl p-3">
-                // <div className="text-xs text-blue-600 mb-1">호흡</div>
-                //{" "}
-                <div className="h-12 mb-2">
-                  // {drawGraph(breathingHistory, "#3b82f6")}
-                  //{" "}
-                </div>
-                //{" "}
-                <div className="text-2xl font-bold text-blue-500">
-                  // {vitalSigns.breathing}
-                  //{" "}
-                </div>
-                // <div className="text-xs text-gray-500">회/분</div>
-                //{" "}
-              </div>
-              // {/* 스트레스 */}
-              //{" "}
-              <div className="bg-purple-50 rounded-xl p-3">
-                // <div className="text-xs text-purple-600 mb-1">BPM</div>
-                //{" "}
-                <div className="h-12 mb-2">
-                  // {drawGraph(stressHistory, "#a855f7")}
-                  //{" "}
-                </div>
-                //{" "}
-                <div className="text-2xl font-bold text-purple-500">
-                  // {vitalSigns.stress}
-                  //{" "}
-                </div>
-                // <div className="text-xs text-gray-500">%</div>
-                //{" "}
-              </div>
-              //{" "}
-            </div>
-            {/* )} */}
+
             {/* 이름 입력 */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
