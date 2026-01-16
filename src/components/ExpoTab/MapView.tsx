@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { MapPin, Award } from "lucide-react";
 import type { RecommendedPlace, Stamp } from "./index";
 
@@ -59,7 +59,7 @@ const MapView: React.FC<Props> = ({ places, stamps, onStampAdded }) => {
   }, [places]);
 
   // 마커 생성 함수
-  const createMarkers = () => {
+  const createMarkers = useCallback(() => {
     if (!naverMapRef.current || !window.naver) return;
 
     // 기존 마커 삭제
@@ -133,7 +133,7 @@ const MapView: React.FC<Props> = ({ places, stamps, onStampAdded }) => {
 
       markersRef.current.push(marker);
     });
-  };
+  }, [places]);
 
   // QR 스캔 결과 받기
   useEffect(() => {
@@ -177,7 +177,7 @@ const MapView: React.FC<Props> = ({ places, stamps, onStampAdded }) => {
 
     window.addEventListener("message", handleMessage);
     return () => window.removeEventListener("message", handleMessage);
-  }, [places, stamps, onStampAdded]);
+  }, [places, stamps, onStampAdded, createMarkers]);
 
   const handleQRScan = (place: RecommendedPlace) => {
     setSelectedPlace(place);

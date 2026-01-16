@@ -74,6 +74,7 @@ const MapTab = () => {
           <iframe
             src={`https://maps.google.com/maps?q=${myLocation.lat},${myLocation.lng}&z=15&output=embed`}
             width="100%"
+            title="map-view"
             height="400"
             style={{ border: 0 }}
             loading="lazy"
