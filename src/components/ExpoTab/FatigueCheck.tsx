@@ -235,12 +235,8 @@ const FatigueCheck: React.FC<Props> = ({ onComplete }) => {
         // 분석 완료 화면
         <div className="flex flex-col items-center justify-center min-h-screen p-4">
           <h3 className="text-xl font-bold text-gray-900 mb-2">
-            분석 완료! 문자전송, 일정시간 후 다음화면 전환
+            분석 완료! 문자전송, 일정시간 후 다음화면 전환?
           </h3>
-
-          <button>
-            <div onClick={() => navigate("/map")}> 지도이동 버튼</div>
-          </button>
         </div>
       )}
     </div>
