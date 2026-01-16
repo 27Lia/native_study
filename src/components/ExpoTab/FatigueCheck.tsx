@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Loader2, User, Phone } from "lucide-react";
+import { User, Phone } from "lucide-react";
 import type { RecommendedPlace } from "./index";
 import { useNavigate } from "react-router-dom";
 
@@ -28,7 +28,6 @@ const FatigueCheck: React.FC<Props> = ({ onComplete }) => {
   const [breathingHistory, setBreathingHistory] = useState<number[]>([]);
   const [stressHistory, setStressHistory] = useState<number[]>([]);
   const scanIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const cameraAreaRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
   // 컴포넌트 마운트 시 바로 카메라 시작
