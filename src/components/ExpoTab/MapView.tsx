@@ -133,7 +133,7 @@ const MapView: React.FC<Props> = ({ places, stamps, onStampAdded }) => {
 
       markersRef.current.push(marker);
     });
-  }, [places]);
+  }, [places, stamps]);
 
   // QR 스캔 결과 받기
   useEffect(() => {
