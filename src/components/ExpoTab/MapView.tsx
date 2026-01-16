@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { MapPin, Navigation, Award } from "lucide-react";
+import { MapPin, Award } from "lucide-react";
 import type { RecommendedPlace, Stamp } from "./index";
 
 interface Props {

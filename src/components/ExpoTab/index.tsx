@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Camera, MapPin, Award, Sparkles } from "lucide-react";
+import { Camera, MapPin, Sparkles } from "lucide-react";
 import FatigueCheck from "./FatigueCheck";
 import MapView from "./MapView";
 import { useNavigate } from "react-router-dom";
