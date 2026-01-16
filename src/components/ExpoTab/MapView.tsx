@@ -23,16 +23,6 @@ const MapView: React.FC<Props> = ({ places, stamps, onStampAdded }) => {
     null,
   );
 
-  const handleQRScan = (place: RecommendedPlace) => {
-    setSelectedPlace(place);
-
-    if (window.ReactNativeWebView) {
-      window.ReactNativeWebView.postMessage(
-        JSON.stringify({ type: "OPEN_QR_SCANNER" }),
-      );
-    }
-  };
-
   const isStamped = useCallback(
     (placeId: string) => {
       return stamps?.some((s) => s.id === placeId);
